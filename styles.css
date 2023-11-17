@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#teams-container {
+    display: flex;
+}
+
+.team {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.team-name {
+    display: block;
+}
+
+.score {
+    font-size: 2em;
+    text-align: center;
+}
+
+.btn-add,
+.btn-subtract {
+    display: block;
+    margin: 5px auto;
+}
+
+#settings-container {
+    margin-top: 20px;
+}
+
+/* Centering team names */
+.team-name {
+    text-align: center;
+    margin-bottom: 10px;
+}

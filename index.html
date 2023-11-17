@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計分板</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+<div id="teams-container">
+    <!-- Teams -->
+<!--    <div class="team" id="team1">-->
+<!--        <input type="text" class="team-name" value="隊伍 1"/>-->
+<!--        <div class="score" id="score1">0</div>-->
+<!--        <button class="btn-add">+</button>-->
+<!--        <button class="btn-subtract">-</button>-->
+<!--    </div>-->
+</div>
+
+<hr>
+
+<div id="settings-container">
+    <!-- Add/Remove Team Buttons -->
+    <div id="team-modify-container">
+        <button id="btn-add-team">添加隊伍</button>
+        <button id="btn-remove-team">移除隊伍</button>
+    </div>
+    <br>
+    <!-- Settings -->
+    <input type="file" id="file-load" style="display:none;" accept=".json">
+    <button id="btn-save">儲存</button>
+    <button id="btn-load">加載</button>
+    <br>
+    <p>
+        <button id="btn-reset">重置所有隊伍分數</button>
+        <button id="btn-remove">移除所有隊伍</button>
+    <p/>
+</div>
+</body>
+</html>
