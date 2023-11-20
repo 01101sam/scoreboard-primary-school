@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計分板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/forms"></script>
+    <script>
+        // Function to update the team score
+        function updateScore(teamId, increment) {
+            const scoreElement = document.getElementById(`score-${teamId}`);
+            let score = parseInt(scoreElement.innerText);
+            score += increment;
+            scoreElement.innerText = score;
+        }
+
+        // Function to reset all team scores
+        function resetAllScores() {
+            document.querySelectorAll('.team-score').forEach(scoreElement => {
+                scoreElement.innerText = '0';
+            });
+        }
+
+        // Function to reset all teams
+        function resetAllTeams() {
+            const teamsContainer = document.getElementById('teams-container');
+            teamsContainer.innerHTML = '';
+        }
+
+        // Function to add a team
+        function addTeam(teamName = null, score = 0) {
+            const teamsContainer = document.getElementById('teams-container');
+            const teamId = `team-${teamsContainer.children.length}`;
+            let teamElement = `
+      <div class="team bg-white p-4 rounded-lg shadow-md m-2">
+        <input type="text" id="name-${teamId}" class="team-name bg-gray-200 p-2 rounded-md mb-2 text-center font-bold" style='color: black' placeholder="隊伍名稱" value="隊伍 ${teamsContainer.children.length + 1}">
+        <div id="score-${teamId}" class="team-score text-2xl font-bold text-center" style='color: black'>0</div>
+        <div class="flex justify-between">
+          <button onclick="updateScore('${teamId}', -1)" class="score-btn bg-red-500 text-white p-2 rounded-md">-</button>
+          <button onclick="updateScore('${teamId}', 1)" class="score-btn bg-green-500 text-white p-2 rounded-md">+</button>
+        </div>
+      </div>
+    `;
+            teamsContainer.insertAdjacentHTML('beforeend', teamElement);
+            if (teamName) document.getElementById(`name-${teamId}`).value = teamName;
+            if (score !== 0) document.getElementById(`score-${teamId}`).innerText = score;
+        }
+
+        // Function to remove the last team
+        function removeTeam() {
+            const teamsContainer = document.getElementById('teams-container');
+            if (teamsContainer.children.length > 0) {
+                teamsContainer.removeChild(teamsContainer.lastChild);
+            }
+        }
+
+        // Function to increment all team scores
+        function incrementAllScores() {
+            document.querySelectorAll('.team-score').forEach(scoreElement => {
+                let score = parseInt(scoreElement.innerText);
+                scoreElement.innerText = score + 1;
+            });
+        }
+
+        // Function to decrement all team scores
+        function decrementAllScores() {
+            document.querySelectorAll('.team-score').forEach(scoreElement => {
+                let score = parseInt(scoreElement.innerText);
+                scoreElement.innerText = score - 1;
+            });
+        }
+
+        // Function to save the scoreboard and download as JSON
+        function saveScoreboard() {
+            const teamsContainer = document.getElementById('teams-container');
+            const teams = [];
+            teamsContainer.querySelectorAll('.team').forEach(teamElement => {
+                const team = {
+                    name: teamElement.querySelector('.team-name').value,
+                    score: parseInt(teamElement.querySelector('.team-score').innerText),
+                };
+                teams.push(team);
+            });
+            const data = {
+                teams: teams,
+            };
+            const dataStr = JSON.stringify(data);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'scoreboard.json';
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Function to load the scoreboard by selecting JSON file
+        function loadScoreboard() {
+            const inputElement = document.createElement('input');
+            inputElement.setAttribute('type', 'file');
+            inputElement.setAttribute('accept', 'application/json');
+            inputElement.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const data = JSON.parse(event.target.result);
+                    resetAllTeams();
+                    data.teams.forEach(team => {
+                        debugger;
+                        addTeam(team.name, team.score);
+                    });
+                };
+                reader.readAsText(file);
+            });
+            inputElement.click();
+        }
+    </script>
+</head>
+<body class="bg-gray-800 text-white">
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4 text-center">計分板</h1>
+    <div id="teams-container" class="flex flex-wrap justify-center">
+        <!-- Teams will be added here dynamically -->
+    </div>
+    <div class="settings mt-8">
+        <h2 class="text-2xl font-bold mb-4 text-center">設置</h2>
+        <div class="flex justify-center space-x-4">
+            <button onclick="addTeam()" class="bg-blue-500 text-white p-2 rounded-md">添加隊伍</button>
+            <button onclick="removeTeam()" class="bg-red-500 text-white p-2 rounded-md">移除隊伍</button>
+            <button onclick="incrementAllScores()" class="bg-green-500 text-white p-2 rounded-md">所有隊伍 +1</button>
+            <button onclick="decrementAllScores()" class="bg-yellow-500 text-white p-2 rounded-md">所有隊伍 -1</button>
+        </div>
+        <div class="flex justify-center space-x-4 mt-4">
+            <button onclick="resetAllScores()" class="bg-red-700 text-white p-2 rounded-md">重置所有隊伍分數</button>
+            <button onclick="resetAllTeams()" class="bg-red-700 text-white p-2 rounded-md">刪除所有隊伍</button>
+        </div>
+        <div class="flex justify-center space-x-4 mt-4">
+            <button onclick="saveScoreboard()" class="bg-gray-700 text-white p-2 rounded-md">儲存</button>
+            <button onclick="loadScoreboard()" class="bg-gray-700 text-white p-2 rounded-md">加載</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
