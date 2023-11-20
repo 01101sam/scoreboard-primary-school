@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save, load, reset, remove buttons
     document.getElementById('btn-save').addEventListener('click', saveScores);
     document.getElementById('btn-load').addEventListener('click', loadScores);
+
+    document.getElementById('btn-batch-add-score').addEventListener('click', () => batchChangeScore(1));
+    document.getElementById('btn-batch-remove-score').addEventListener('click', () => batchChangeScore(-1));
+
     document.getElementById('btn-reset').addEventListener('click', resetScores);
     document.getElementById('btn-remove').addEventListener('click', removeAllTeams);
 
@@ -54,6 +58,13 @@ function changeScore(button, increment) {
     let scoreDiv = button.parentNode.querySelector('.score');
     let currentScore = parseInt(scoreDiv.textContent, 10);
     scoreDiv.textContent = currentScore + increment;
+}
+
+function batchChangeScore(increment) {
+    document.querySelectorAll('.score').forEach(scoreDiv => {
+        let currentScore = parseInt(scoreDiv.textContent, 10);
+        scoreDiv.textContent = currentScore + increment;
+    });
 }
 
 function saveScores() {
